@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCCM CLUSTER UPDATES - HTML File Creator</title>
+    <script src="https://cdn.tiny.cloud/1/5sx7epyhvvqls5rtfkehbfaua9bh9fbaeg9jwup8nqwms73z/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <style>
+    body {
+     body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2A87C8;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+form {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for each row */
+    grid-gap: 20px; /* Adjust the gap between rows */
+}
+
+label[for="pageTitle"] {
+    font-size: 1.2em; /* Adjust the font size as needed */
+    font-weight: bold;
+}
+
+textarea#pageTitle {
+    width: 50%; /* Adjust the width as needed */
+    max-width: 300px; /* Set a maximum width if necessary */
+}
+
+.editor-container {
+    display: block; /* Display as block to appear at the same x position */
+    margin-bottom: 20px; /* Add space between each editor */
+}
+
+.editor-container label {
+    margin-bottom: 5px;
+}
+
+.editor-container textarea {
+    margin-bottom: 10px;
+    height: 150px;
+    width: 100%;
+}
+
+.editor-container img {
+    max-width: 50px;
+    margin-right: 10px;
+}
+
+.editor-container > div {
+    margin-left: 50px; /* Add space between image and TinyMCE editor */
+}
+
+button {
+    background-color: #2A87C8;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+</style>
+</head>
+<body>
+    <header>
+        <h1>CCCM CLUSTER UPDATES</h1>
+    </header>
+
+    <form id="htmlForm">
+        <!-- Region -->
+        <label for="pageTitle">Region:</label>
+        <textarea id="pageTitle" name="pageTitle" rows="1" required></textarea>
+
+
+<!-- Update Editors with Images -->
+        <div class="editor-container">
+            <img src="image/image0.png" alt="Image 0">
+            <label for="htmlContent0" style="font-weight: bold; font-size: 18px;">Remarks: In this section, if applicable, please provide any remarks regarding your submission.</label>
+            <textarea id="htmlContent0" name="htmlContent0"></textarea>
+        </div>
+
+
+        <!-- Update Editors with Images -->
+        <div class="editor-container">
+            <img src="image/image1.png" alt="Image 1">
+            <label for="htmlContent1">Shelter & NFIS:</label>
+            <textarea id="htmlContent1" name="htmlContent1"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image2.png" alt="Image 2">
+            <label for="htmlContent2">Food:</label>
+            <textarea id="htmlContent2" name="htmlContent2"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image3.png" alt="Image 3">
+            <label for="htmlContent3">WASH:</label>
+            <textarea id="htmlContent3" name="htmlContent3"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image4.png" alt="Image 4">
+            <label for="htmlContent4">Health:</label>
+            <textarea id="htmlContent4" name="htmlContent4"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image5.png" alt="Image 5">
+            <label for="htmlContent5">Education:</label>
+            <textarea id="htmlContent5" name="htmlContent5"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image6.png" alt="Image 6">
+            <label for="htmlContent6">Protection:</label>
+            <textarea id="htmlContent6" name="htmlContent6"></textarea>
+        </div>
+
+        <div class="editor-container">
+            <img src="image/image7.png" alt="Image 7">
+            <label for="htmlContent7">CCCM:</label>
+            <textarea id="htmlContent7" name="htmlContent7"></textarea>
+        </div>
+
+        <!-- Repeat the structure for the remaining editors -->
+
+        <button type="button" onclick="saveContent()">Submit</button>
+    </form>
+
+    <script>
+        // Initialize TinyMCE for each editor
+
+for (let i = 0; i <= 7; i++) {
+    tinymce.init({
+        selector: `#htmlContent${i}`,
+        plugins: ['autoresize', 'lists', 'paste', 'image'],
+        paste_preprocess: function (plugin, args) {
+            args.content = args.content.replace(/background-color[^;]+;/g, '');
+        },
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | image | bullist numlist outdent indent',
+        autoresize_bottom_margin: 16,
+        images_upload_url: '/your/image/upload/endpoint', // Replace with your actual server endpoint for image upload
+        images_upload_handler: function (blobInfo, success, failure) {
+           
+        }
+    });
+}
+
+
+        function saveContent() {
+            var pageTitle = document.getElementById('pageTitle').value;
+            var contentData = {};
+
+            // Retrieve content from all editors
+            for (let i = 0; i <= 7; i++) {
+                contentData[`htmlContent${i}`] = tinymce.get(`htmlContent${i}`).getContent();
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'save.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert('Saved successfully!');
+                }
+            };
+
+            // Encode content data
+            var data = 'pageTitle=' + encodeURIComponent(pageTitle);
+            for (const key in contentData) {
+                data += `&${key}=${encodeURIComponent(contentData[key])}`;
+            }
+
+            xhr.send(data);
+        }
+    </script>
+</body>
+</html>
